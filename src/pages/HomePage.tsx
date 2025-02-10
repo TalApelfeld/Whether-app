@@ -1,14 +1,11 @@
-import { useFetchers } from "react-router-dom";
 import HomepageInfoCard from "../components/HomepageInfoCard";
 import useFetch from "../hooks/useFetch";
-import { useState } from "react";
 const apiKey = import.meta.env.VITE_OPEN_WETHER_API_KEY;
 console.log(apiKey);
 const url = `https://api.openweathermap.org/data/2.5/weather?lat=${32.013651}&lon=${34.750922}&units=${"metric"}&appid=${apiKey}`;
 
 export default function HomePage() {
   const data = useFetch(url);
-  const [s, s] = useState();
   return (
     <>
       {data ? (
