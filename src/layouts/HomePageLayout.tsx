@@ -44,9 +44,9 @@ export default function HomePageLayout({
   const [searchedCityData, setSearchedCityData] =
     useState<ISearchedCity | null>(null);
 
-  if (hourlyWeatherDataFromUrl) {
-    console.log(hourlyWeatherDataFromUrl);
-  }
+  //   if (hourlyWeatherDataFromUrl) {
+  //     console.log(hourlyWeatherDataFromUrl);
+  //   }
   function getMonthName(date: Date) {
     const userLocale = navigator.language;
     return new Intl.DateTimeFormat(userLocale, { month: "long" }).format(date);
@@ -55,7 +55,7 @@ export default function HomePageLayout({
   function getCityWeatherData(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     fetch(
-      `http://api.openweathermap.org/data/2.5/weather?q=${inputValue}&units=${"metric"}&appid=2d04d370dc6e8e24a96bc78555180eef`
+      `https://api.openweathermap.org/data/2.5/weather?q=${inputValue}&units=${"metric"}&appid=2d04d370dc6e8e24a96bc78555180eef`
     )
       .then((res) => {
         return res.json();
@@ -88,7 +88,7 @@ export default function HomePageLayout({
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="none"
+          fill={"rgba(92, 92, 131, 0.347)"}
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
@@ -100,6 +100,7 @@ export default function HomePageLayout({
             strokeLinecap="round"
             strokeLinejoin="round"
             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            color="white"
           />
         </svg>
       </button>
@@ -109,6 +110,8 @@ export default function HomePageLayout({
           style={{ display: `${searchIsClicked ? "flex" : "none"}` }}
         >
           <input
+            autoFocus
+            required
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setInputValue(e.target.value)
             }
@@ -116,6 +119,25 @@ export default function HomePageLayout({
             placeholder="Enter city to look for..."
             value={inputValue}
           />
+          <button className="submit-btn" type="submit">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="transparent"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-6"
+              width="25px"
+              height="25px"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                color="white"
+              />
+            </svg>
+          </button>
         </div>
       </form>
       <div className="homepage-top-btn-container">
