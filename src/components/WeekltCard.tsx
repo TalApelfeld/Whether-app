@@ -1,32 +1,46 @@
 import { useEffect, useState } from "react";
+import { IDailyWeatherData } from "../hooks/useFetch";
 
-interface HomepageInfoCardPorps {
-  timeInMiliSec: number;
-  temp: number;
+interface WeeklyCardProps {
+  dailyData: IDailyWeatherData | null;
 }
+export default function WeeklyCard({ dailyData }: WeeklyCardProps) {
+  const [dateData, setDateData] = useState<Date | null>(null);
 
-export default function HomepageInfoCard({
-  timeInMiliSec,
-  temp,
-}: HomepageInfoCardPorps) {
-  const [timeString, setTimeString] = useState<string>("");
-
-  function convertMiliSecToTime() {
-    const convertedDateFromMiliSec = new Date(timeInMiliSec * 1000);
-    const hours = convertedDateFromMiliSec.getHours();
-    const minutes = convertedDateFromMiliSec.getMinutes();
-
-    // Format the time string to HH:MM
-    // Pad the minutes with leading zero if necessary
-    setTimeString(`${hours}:${minutes < 10 ? "0" + minutes : minutes}`);
+  function getDateData(dt: number | undefined) {
+    if (!dt) return;
+    const date = new Date(dt * 1000);
+    setDateData(date);
   }
 
-  useEffect(() => {
-    convertMiliSecToTime();
-  }, []);
+  function getDayName(dateData: Date | null) {
+    const userLocale = navigator.language;
+    return dateData?.toLocaleDateString(userLocale, { weekday: "long" });
+  }
 
+  function getMonthName(date: Date | null) {
+    if (!date) return;
+    const userLocale = navigator.language;
+    return new Intl.DateTimeFormat(userLocale, { month: "long" }).format(date);
+  }
+  useEffect(() => {
+    getDateData(dailyData?.dt);
+  }, []);
   return (
-    <div className="homepage-info-card">
+    <div className="weekly-card">
+      <p className="a day">{getDayName(dateData)}</p>
+      <p className="b date">
+        {getMonthName(dateData)},{dateData?.getDate()}
+      </p>
+      <p className="c temp-min">
+        {dailyData ? Math.floor(dailyData?.temp.min) : ""}
+        <span className="celsius">°C</span>
+      </p>
+      <p className="d temp-max">
+        {dailyData ? Math.floor(dailyData?.temp.max) : ""}
+        <span className="celsius">°C</span>
+      </p>
+
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -34,6 +48,7 @@ export default function HomepageInfoCard({
         width="70"
         height="70"
         viewBox="15 15 40 40"
+        className="e"
       >
         <defs>
           <filter id="blur" width="200%" height="200%">
@@ -168,11 +183,6 @@ export default function HomepageInfoCard({
           </g>
         </g>
       </svg>
-      <small>{timeString}</small>
-      <p>
-        {temp}
-        <span className="celsius">°C</span>
-      </p>
     </div>
   );
 }

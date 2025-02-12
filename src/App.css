@@ -14,10 +14,6 @@ body {
 
 /** In react all the application is renderd through one div with Id of #root */
 #root {
-  display: flex;
-  flex-direction: column;
-  /* justify-content:space-evenly; */
-  align-items: center;
   background-color: rgb(26, 26, 54);
   min-height: 100vh;
   color: whitesmoke;
@@ -31,7 +27,7 @@ body {
 
   background-size: 100% 30%;
   background-repeat: no-repeat;
-  gap: 1.2rem;
+  /* overflow-x: hidden; */
 }
 
 #root::before {
@@ -50,7 +46,22 @@ body {
   filter: blur(10px);
   border-bottom-right-radius: 100px;
 }
-/* *                                                 ----------------LOADER---------------                                                      */
+
+/* * --------------------------------------------------------Layouts---------------------------------------------------------------------*/
+.layout-homepage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: 100vh;
+  max-width: 100vw;
+  gap: 1.2rem;
+}
+/************************************************************************************************************************
+/************************************************************************************************************************
+/************************************************************************************************************************/
+
+/* *                                       ------------------Loader------------------                                                   */
 
 .loader-container {
   position: absolute;
@@ -101,10 +112,54 @@ body {
     transform: scale(1.2);
   }
 }
-/* *                                                 ----------------HOMEPAGE---------------                                                      */
+/* * --------------------------------------------------------HOMEPAGE---------------------------------------------------------------------*/
 
-.homepage-container {
+/* *                                       ------------------Forecast UI------------------                                                   */
+
+/* .homepage-container {
   min-height: 100vh;
+} */
+.search {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-style: none;
+  background-color: rgba(56, 56, 113, 0.347);
+  border-bottom-right-radius: 10px;
+  width: 6rem;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+}
+
+.search:active {
+  transform: scale(0.95);
+  background-color: rgba(92, 92, 131, 0.347);
+}
+
+.search-input {
+  /* the display is set inline in the code*/
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 6.5rem;
+  width: 80%;
+  height: 6rem;
+  background-color: rgba(92, 92, 131, 0.347);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.search-input input {
+  border-style: none;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  color: white;
+  padding-left: 2.4rem;
 }
 
 .homepage-title-container {
@@ -126,22 +181,25 @@ body {
   gap: 1.2rem;
   justify-content: center;
   margin-bottom: 2.4rem;
+  margin: 0 auto;
 }
 
 .homepage-top-btn-container button:nth-child(1) {
   color: whitesmoke;
-  background: linear-gradient(
+  /* background: linear-gradient(
     90deg,
     rgb(0, 150, 225) 100%,
     #3d4a9d 30%,
     #3d4a9d 100%
-  );
+  ); */
+  background-color: rgba(56, 56, 113, 0.347);
   padding: 1.2rem 2.8rem;
   border-radius: 12px;
   border-style: none;
 }
 
 .homepage-top-btn-container button:nth-child(2) {
+  min-width: 10.786rem;
   color: whitesmoke;
   background-color: rgba(56, 56, 113, 0.347);
   padding: 1.2rem 2.8rem;
@@ -149,15 +207,25 @@ body {
   border-style: none;
 }
 
+.homepage-top-btn-container .clicked {
+  background: linear-gradient(
+    90deg,
+    rgb(0, 150, 225) 100%,
+    #3d4a9d 30%,
+    #3d4a9d 100%
+  );
+}
+
 .homepage-info {
   display: flex;
   flex-direction: column;
   margin-bottom: 4.8rem;
+  align-items: center;
 }
 
 .homepage-info svg {
   height: 1%;
-  width: 100%;
+  width: 80%;
 }
 
 .homepage-info-trio {
@@ -168,6 +236,7 @@ body {
   text-align: center;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
 }
 
 .homepage-info-trio div {
@@ -176,6 +245,25 @@ body {
   /* padding: 1rem; */
   border-radius: 15px;
   /* width: 100%; */
+}
+
+.homepage-info-trio .title-with-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.title-with-svg:nth-child(1) svg {
+  width: 40px;
+  height: 40px;
+}
+
+.title-with-svg:nth-child(2) {
+  gap: 0.4rem;
+}
+
+.title-with-svg:nth-child(2) svg {
+  width: 25px;
+  height: 25px;
 }
 
 .homepage-hourly-container {
@@ -191,11 +279,13 @@ body {
 .homepage-full-report {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
-.homepage-full-report p {
+.homepage-full-report a {
   color: rgb(0, 150, 225);
   font-size: small;
+  text-decoration: underline;
 }
 
 .homepage-full-report h1 {
@@ -204,11 +294,13 @@ body {
 
 .homepage-hourly-info {
   display: flex;
-  /* background-color: red; */
+  background-color: rgba(56, 56, 113, 0.347);
   gap: 1.2rem;
   /* white-space: nowrap; Prevents content from wrapping */
   overflow-x: auto; /* Enables horizontal scrolling */
   scrollbar-width: none; /* Firefox: Makes scrollbar thinner */
+  padding: 0.6rem;
+  border-radius: 15px;
 }
 
 .homepage-hourly-info::-webkit-scrollbar {
@@ -245,6 +337,110 @@ body {
 .celsius {
   font-size: 0.6em;
   vertical-align: super;
+}
+
+/* *                                       ------------------Weekly UI------------------                                                   */
+.homepage-weekly-top-btn-container {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-bottom: 2.4rem;
+  margin: 0 auto;
+}
+
+.homepage-weekly-top-btn-container button {
+  color: whitesmoke;
+  padding: 1.2rem 2.8rem;
+  border-radius: 12px;
+  border-style: none;
+}
+
+.homepage-weekly-top-btn-container button:nth-child(1) {
+  background-color: rgba(56, 56, 113, 0.347);
+}
+
+.homepage-weekly-top-btn-container button:nth-child(2) {
+  background: linear-gradient(
+    90deg,
+    rgb(0, 150, 225) 100%,
+    #3d4a9d 30%,
+    #3d4a9d 100%
+  );
+}
+
+.homepage-full-report p {
+  color: rgb(128, 128, 157);
+  font-size: medium;
+}
+
+.weekly-sub-title-container {
+  display: flex;
+  width: 90%;
+}
+.weekly-sub-title-container h2 {
+  margin-right: auto;
+}
+
+.weekly-forecast-card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  height: 30rem;
+  /* background-color: red; */
+  gap: 1.2rem;
+  overflow-y: scroll;
+  box-shadow: inset 0 10px 10px -10px #000000, inset 0 -10px 10px -10px #000000;
+}
+
+.weekly-card {
+  width: 100%;
+  border-radius: 15px;
+  display: grid;
+  background-color: rgba(56, 56, 113, 0.347);
+  grid-template-columns: repeat(3, 1fr); /* 3 columns of equal width */
+  grid-template-rows: repeat(2, 1fr); /* 2 rows of 100px each */
+  /* grid-gap: 1rem; */
+  grid-template-areas:
+    "a c e"
+    "b d e";
+  /* background-color: green; */
+  align-items: center;
+  justify-content: center;
+}
+
+.a {
+  grid-area: a;
+}
+.b {
+  grid-area: b;
+}
+.c {
+  grid-area: c;
+}
+.d {
+  grid-area: d;
+}
+.e {
+  grid-area: e;
+}
+.weekly-card .day {
+  font-size: large;
+  text-align: center;
+}
+
+.weekly-card .date {
+  font-size: small;
+  text-align: center;
+}
+
+.weekly-card .temp-min,
+.weekly-card .temp-max {
+  font-size: large;
+  text-align: center;
+}
+.weekly-card svg {
+  margin: 0 auto;
 }
 /************************************************************************************************************************
 /************************************************************************************************************************
