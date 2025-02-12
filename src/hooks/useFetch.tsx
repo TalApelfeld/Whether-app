@@ -49,8 +49,9 @@ export default function useFetch(userCurrentPosition: useFetchProps | null): {
     { dt: number; temp: number }[] | null
   >(null);
 
-  const [dailyWeatherData, setDailyWeatherData] =
-    useState<IDailyWeatherData | null>(null);
+  const [dailyWeatherData, setDailyWeatherData] = useState<
+    IDailyWeatherData[] | null
+  >(null);
 
   const [CurrentWheatherData, setCurrentWheatherData] =
     useState<ICurrentWheatherData | null>(null);
