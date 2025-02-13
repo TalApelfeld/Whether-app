@@ -43,6 +43,7 @@ export default function HomePageLayout({
   const [inputValue, setInputValue] = useState("");
   const [searchedCityData, setSearchedCityData] =
     useState<ISearchedCity | null>(null);
+  const [isError, setIsError] = useState(false);
 
   //   if (hourlyWeatherDataFromUrl) {
   //     console.log(hourlyWeatherDataFromUrl);
@@ -52,23 +53,34 @@ export default function HomePageLayout({
     return new Intl.DateTimeFormat(userLocale, { month: "long" }).format(date);
   }
 
-  function getCityWeatherData(e: FormEvent<HTMLFormElement>) {
+  async function getCityWeatherData(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${inputValue}&units=${"metric"}&appid=2d04d370dc6e8e24a96bc78555180eef`
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((data: ISearchedCity) => {
-        setSearchedCityData(data);
-        setInputValue("");
-        setSearchIsClicked(!searchIsClicked);
-      });
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${inputValue}&units=${"metric"}&appid=2d04d370dc6e8e24a96bc78555180eef`
+      );
+      if (res.status == 404)
+        throw new Error("There's no findings for such city");
+      const data = await res.json();
+      setSearchedCityData(data);
+      setInputValue("");
+      setSearchIsClicked(!searchIsClicked);
+    } catch (error) {
+      setIsError(true);
+      setInputValue("");
+      setSearchIsClicked(!searchIsClicked);
+    } finally {
+      setTimeout(() => {
+        setIsError(false);
+      }, 2500);
+    }
   }
 
   return (
     <>
+      <div className={`error ${isError ? "show" : ""}`}>
+        <span>Sorry... There's no findings for such city</span>
+      </div>
       <div className="homepage-title-container">
         <h1>
           {searchedCityData
