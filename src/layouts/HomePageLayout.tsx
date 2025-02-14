@@ -7,6 +7,15 @@ import {
 } from "react";
 import { ICurrentWheatherData, IHourlyWeatherData } from "../hooks/useFetch";
 import HourlyReportContainer from "../components/HourlyReportContainer";
+import {
+  ClearDaySVG,
+  ClearNightSVG,
+  CloudyDaySVG,
+  CloudyNightSVG,
+  RainyDaySVG,
+  RainyNightSVG,
+  ThunderSVG,
+} from "../components/WeatherComponents";
 
 interface HomePageLayoutProps {
   hourlyWeatherDataFromUrl: IHourlyWeatherData[] | null;
@@ -14,9 +23,18 @@ interface HomePageLayoutProps {
   setForecast: Dispatch<SetStateAction<boolean>>;
   setWeekly: Dispatch<SetStateAction<boolean>>;
   dateData: Date | null;
+  setSearchedCityCoords: Dispatch<
+    SetStateAction<{
+      lat: number;
+      lon: number;
+    } | null>
+  >;
+  searchedCityHourlyData: IHourlyWeatherData[] | null;
+  searchedCityData: ISearchedCity | null;
+  setSearchedCityData: Dispatch<SetStateAction<ISearchedCity | null>>;
 }
 
-interface ISearchedCity {
+export interface ISearchedCity {
   name: string;
   main: {
     temp: number;
@@ -28,6 +46,10 @@ interface ISearchedCity {
   sys: {
     country: string;
   };
+  coord: {
+    lat: number;
+    lon: number;
+  };
 }
 
 export default function HomePageLayout({
@@ -36,18 +58,22 @@ export default function HomePageLayout({
   setForecast,
   setWeekly,
   dateData,
+  setSearchedCityCoords,
+  searchedCityHourlyData,
+  searchedCityData,
+  setSearchedCityData,
 }: HomePageLayoutProps) {
   const [isWeeklyButtonClicked, setWeeklyButtonClicked] =
     useState<boolean>(false);
   const [searchIsClicked, setSearchIsClicked] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [searchedCityData, setSearchedCityData] =
-    useState<ISearchedCity | null>(null);
+
   const [isError, setIsError] = useState(false);
 
-  //   if (hourlyWeatherDataFromUrl) {
-  //     console.log(hourlyWeatherDataFromUrl);
-  //   }
+  if (CurrentWheatherData) {
+    console.log(CurrentWheatherData);
+  }
+
   function getMonthName(date: Date) {
     const userLocale = navigator.language;
     return new Intl.DateTimeFormat(userLocale, { month: "long" }).format(date);
@@ -61,8 +87,9 @@ export default function HomePageLayout({
       );
       if (res.status == 404)
         throw new Error("There's no findings for such city");
-      const data = await res.json();
+      const data: ISearchedCity = await res.json();
       setSearchedCityData(data);
+      setSearchedCityCoords(data.coord);
       setInputValue("");
       setSearchIsClicked(!searchIsClicked);
     } catch (error) {
@@ -76,6 +103,36 @@ export default function HomePageLayout({
     }
   }
 
+  function showSVG() {
+    const date = new Date();
+    if (date.getHours() >= 6 && date.getHours() <= 18) {
+      if (CurrentWheatherData?.weather[0].main.includes("Clear")) {
+        return <ClearDaySVG />;
+      }
+      if (CurrentWheatherData?.weather[0].main.includes("Clouds")) {
+        return <CloudyDaySVG />;
+      }
+      if (CurrentWheatherData?.weather[0].main.includes("Rain")) {
+        return <RainyDaySVG />;
+      }
+      if (CurrentWheatherData?.weather[0].main.includes("Thunderstorm")) {
+        return <ThunderSVG />;
+      }
+    } else {
+      if (CurrentWheatherData?.weather[0].main.includes("Clear")) {
+        return <ClearNightSVG />;
+      }
+      if (CurrentWheatherData?.weather[0].main.includes("Clouds")) {
+        return <CloudyNightSVG />;
+      }
+      if (CurrentWheatherData?.weather[0].main.includes("Rain")) {
+        return <RainyNightSVG />;
+      }
+      if (CurrentWheatherData?.weather[0].main.includes("Thunderstorm")) {
+        return <ThunderSVG />;
+      }
+    }
+  }
   return (
     <>
       <div className={`error ${isError ? "show" : ""}`}>
@@ -168,147 +225,7 @@ export default function HomePageLayout({
         </button>
       </div>
       <div className="homepage-info">
-        <svg
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          width="100"
-          height="100"
-          viewBox="6.5 10 50 50"
-        >
-          <defs>
-            <filter id="blur" width="200%" height="200%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-              <feOffset dx="0" dy="4" result="offsetblur" />
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="0.05" />
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <style type="text/css"></style>
-          </defs>
-          <g filter="url(#blur)" id="day">
-            <g transform="translate(32,32)">
-              <g className="am-weather-sun am-weather-sun-shiny am-weather-easing-ease-in-out">
-                <g>
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-                <g transform="rotate(45)">
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-                <g transform="rotate(90)">
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-                <g transform="rotate(135)">
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-                <g transform="rotate(180)">
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-                <g transform="rotate(225)">
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-                <g transform="rotate(270)">
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-                <g transform="rotate(315)">
-                  <line
-                    fill="none"
-                    stroke="orange"
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    transform="translate(0,9)"
-                    x1="0"
-                    x2="0"
-                    y1="0"
-                    y2="3"
-                  />
-                </g>
-              </g>
-              <circle
-                cx="0"
-                cy="0"
-                fill="orange"
-                r="5"
-                stroke="orange"
-                strokeWidth="2"
-              />
-            </g>
-          </g>
-        </svg>
+        {showSVG()}
         <div className="homepage-info-trio">
           <div className="title-with-svg">
             Temp
@@ -414,6 +331,8 @@ export default function HomePageLayout({
       </div>
       <HourlyReportContainer
         hourlyWeatherDataFromUrl={hourlyWeatherDataFromUrl}
+        CurrentWheatherData={CurrentWheatherData}
+        searchedCityHourlyData={searchedCityHourlyData}
       />
     </>
   );

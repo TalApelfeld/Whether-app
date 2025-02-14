@@ -1,6 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import HourlyReportContainer from "../components/HourlyReportContainer";
-import { IDailyWeatherData, IHourlyWeatherData } from "../hooks/useFetch";
+import {
+  ICurrentWheatherData,
+  IDailyWeatherData,
+  IHourlyWeatherData,
+} from "../hooks/useFetch";
 import WeeklyCard from "../components/WeekltCard";
 
 interface WeeklyForecastProps {
@@ -9,6 +13,9 @@ interface WeeklyForecastProps {
   hourlyWeatherDataFromUrl: IHourlyWeatherData[] | null;
   dateData: Date | null;
   dailyWeatherData: IDailyWeatherData[] | null;
+  CurrentWheatherData: ICurrentWheatherData | null;
+  searchedCityHourlyData: IHourlyWeatherData[] | null;
+  searchedCityDailyData: IDailyWeatherData[] | null;
 }
 export default function WeeklyForecast({
   setForecast,
@@ -16,6 +23,9 @@ export default function WeeklyForecast({
   hourlyWeatherDataFromUrl,
   dateData,
   dailyWeatherData,
+  CurrentWheatherData,
+  searchedCityHourlyData,
+  searchedCityDailyData,
 }: WeeklyForecastProps) {
   return (
     <>
@@ -23,6 +33,8 @@ export default function WeeklyForecast({
       <HourlyReportContainer
         hourlyWeatherDataFromUrl={hourlyWeatherDataFromUrl}
         dateData={dateData}
+        CurrentWheatherData={CurrentWheatherData}
+        searchedCityHourlyData={searchedCityHourlyData}
       />
       <div className="homepage-weekly-top-btn-container">
         <button
@@ -55,11 +67,17 @@ export default function WeeklyForecast({
         </svg>
       </div>
       <div className="weekly-forecast-card-container">
-        {dailyWeatherData?.map(
-          (dailyData: IDailyWeatherData, index: number) => (
-            <WeeklyCard dailyData={dailyData} key={index} />
-          )
-        )}
+        {searchedCityDailyData
+          ? searchedCityDailyData?.map(
+              (dailyDataObj: IDailyWeatherData, index: number) => (
+                <WeeklyCard dailyData={dailyDataObj} key={index} />
+              )
+            )
+          : dailyWeatherData?.map(
+              (dailyDataObj: IDailyWeatherData, index: number) => (
+                <WeeklyCard dailyData={dailyDataObj} key={index} />
+              )
+            )}
       </div>
     </>
   );

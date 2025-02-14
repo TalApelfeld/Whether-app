@@ -11,12 +11,16 @@ export interface IHourlyWeatherData {
   dt: number;
   temp: number;
 }
+
 export interface IDailyWeatherData {
   dt: number;
   temp: {
     min: number;
     max: number;
   };
+  weather: {
+    main: string;
+  }[];
 }
 
 export interface ICurrentWheatherData {
@@ -31,16 +35,19 @@ export interface ICurrentWheatherData {
   wind: {
     speed: number;
   };
+  weather: {
+    main: string;
+  }[];
 }
 export default function useFetch(userCurrentPosition: useFetchProps | null): {
   hourlyWeatherDataFromUrl: IHourlyWeatherData[] | null;
   CurrentWheatherData: ICurrentWheatherData | null;
   dailyWeatherData: IDailyWeatherData[] | null;
 } {
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${
+  const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${
     userCurrentPosition?.latitude
   }&lon=${userCurrentPosition?.longitude}&units=${"metric"}&appid=${apiKey}`;
-  const newUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${
+  const hourlyWeatherUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${
     userCurrentPosition?.latitude
   }&lon=${
     userCurrentPosition?.longitude
@@ -57,16 +64,18 @@ export default function useFetch(userCurrentPosition: useFetchProps | null): {
     useState<ICurrentWheatherData | null>(null);
 
   async function fetchHourlyAndDailyData() {
-    const res = await fetch(newUrl);
+    const res = await fetch(hourlyWeatherUrl);
     const data = await res.json();
     console.log(data);
     //   setTimeout(() => {
     // }, 1000);
+
+    // This path of url provides both hourly and daily
     sethourlyWeatherDataFromUrl(data.hourly);
     setDailyWeatherData(data.daily);
   }
   async function fetchDataForNameOfCity() {
-    const res = await fetch(url);
+    const res = await fetch(currentWeatherUrl);
     const data = await res.json();
     //   setTimeout(() => {
     // }, 1000);
