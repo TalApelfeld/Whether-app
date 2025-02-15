@@ -28,7 +28,7 @@ export default function HourlyReportContainer({
             {dateData?.getFullYear()}
           </p>
         ) : (
-          <a href="#">View full report</a>
+          <a href="fullreport">View full report</a>
         )}
       </div>
 

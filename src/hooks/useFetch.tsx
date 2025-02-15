@@ -27,16 +27,26 @@ export interface ICurrentWheatherData {
   name: string;
   sys: {
     country: string;
+    sunrise: number;
+    sunset: number;
   };
   main: {
     temp: number;
     humidity: number;
+    feels_like: number;
+    pressure: number;
+    visibility: number;
+    grnd_level: number;
+    sea_level: number;
+    temp_max: number;
+    temp_min: number;
   };
   wind: {
     speed: number;
   };
   weather: {
     main: string;
+    description: string;
   }[];
 }
 export default function useFetch(userCurrentPosition: useFetchProps | null): {

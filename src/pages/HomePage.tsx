@@ -5,7 +5,8 @@ import useFetch, {
   IHourlyWeatherData,
 } from "../hooks/useFetch";
 import WeeklyForecast from "../layouts/WeeklyForecast";
-interface ICurrentUserPosition {
+
+export interface ICurrentUserPosition {
   latitude: number;
   longitude: number;
 }

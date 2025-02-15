@@ -96,6 +96,7 @@ export default function HomePageLayout({
       setIsError(true);
       setInputValue("");
       setSearchIsClicked(!searchIsClicked);
+      console.log(error);
     } finally {
       setTimeout(() => {
         setIsError(false);
