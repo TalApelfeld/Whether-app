@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import HomePageLayout, { ISearchedCity } from "../layouts/HomePageLayout";
 import useFetch, {
   IDailyWeatherData,
@@ -44,6 +44,7 @@ export default function HomePage() {
         handleGetPostionSuccess(position);
       },
       (error) => {
+        console.log(error);
         alert(
           "Please enable location services on your device and reload the page."
         );

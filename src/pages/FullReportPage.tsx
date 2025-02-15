@@ -29,6 +29,7 @@ export default function FullReport() {
         handleGetPostionSuccess(position);
       },
       (error) => {
+        console.log(error);
         alert(
           "Please enable location services on your device and reload the page."
         );
@@ -43,13 +44,20 @@ export default function FullReport() {
     setCurrentUserPosition({ latitude, longitude });
   }
   async function getCurrentWeather() {
-    const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${
-        userCurrentPosition?.latitude
-      }&lon=${userCurrentPosition?.longitude}&units=${"metric"}&appid=${apiKey}`
-    );
-    const data = await res.json();
-    setCurrentWeatherData(data);
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${
+          userCurrentPosition?.latitude
+        }&lon=${
+          userCurrentPosition?.longitude
+        }&units=${"metric"}&appid=${apiKey}`
+      );
+      if (!res.ok) throw new Error("There was A problem with getting the data");
+      const data = await res.json();
+      setCurrentWeatherData(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function showSVG() {

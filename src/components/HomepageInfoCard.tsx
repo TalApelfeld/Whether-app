@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ICurrentWheatherData, IHourlyWeatherData } from "../hooks/useFetch";
+import { ICurrentWheatherData } from "../hooks/useFetch";
 import {
   ClearDaySVG,
   ClearNightSVG,

@@ -1,5 +1,4 @@
 import { ICurrentWheatherData, IHourlyWeatherData } from "../hooks/useFetch";
-import { ISearchedCity } from "../layouts/HomePageLayout";
 import HomepageInfoCard from "./HomepageInfoCard";
 
 interface HourlyReportContainerProps {
