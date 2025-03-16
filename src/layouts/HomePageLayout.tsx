@@ -3,6 +3,7 @@ import {
   Dispatch,
   FormEvent,
   SetStateAction,
+  useEffect,
   useState,
 } from "react";
 import { ICurrentWheatherData, IHourlyWeatherData } from "../hooks/useFetch";
@@ -16,6 +17,7 @@ import {
   RainyNightSVG,
   ThunderSVG,
 } from "../components/WeatherComponents";
+import { motion } from "motion/react";
 
 interface HomePageLayoutProps {
   hourlyWeatherDataFromUrl: IHourlyWeatherData[] | null;
@@ -67,16 +69,42 @@ export default function HomePageLayout({
     useState<boolean>(false);
   const [searchIsClicked, setSearchIsClicked] = useState(false);
   const [inputValue, setInputValue] = useState("");
-
+  const [isTyping, setIsTyping] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [citiesOptions, setCitiesOptions] = useState<string[] | null>(null);
+  const [currentCitiesOptions, setCurrentCitiesoptions] = useState<
+    string[] | undefined
+  >(undefined);
 
-  if (CurrentWheatherData) {
-    console.log(CurrentWheatherData);
+  useEffect(() => {
+    getCitiesFromDB();
+  }, []);
+
+  // if (CurrentWheatherData) {
+  //   console.log(CurrentWheatherData);
+  // }
+
+  if (citiesOptions) {
+    console.log(citiesOptions);
+  }
+
+  function filterCitiesByLetter(cities: string[] | null, letter: string) {
+    const lowerCaseLetter = letter.toLowerCase();
+
+    return cities?.filter((city) =>
+      city.toLowerCase().startsWith(lowerCaseLetter)
+    );
   }
 
   function getMonthName(date: Date) {
     const userLocale = navigator.language;
     return new Intl.DateTimeFormat(userLocale, { month: "long" }).format(date);
+  }
+
+  async function getCitiesFromDB() {
+    const res = await fetch("https://chordify-api.onrender.com/cities");
+    const data = await res.json();
+    setCitiesOptions(data.cities[0].cities);
   }
 
   async function getCityWeatherData(e: FormEvent<HTMLFormElement>) {
@@ -134,6 +162,7 @@ export default function HomePageLayout({
       }
     }
   }
+
   return (
     <>
       <div className={`error ${isError ? "show" : ""}`}>
@@ -154,7 +183,10 @@ export default function HomePageLayout({
       </div>
       <button
         className="search"
-        onClick={() => setSearchIsClicked(!searchIsClicked)}
+        onClick={() => {
+          setSearchIsClicked(!searchIsClicked);
+          setIsTyping(false);
+        }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -182,9 +214,18 @@ export default function HomePageLayout({
           <input
             autoFocus
             required
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setInputValue(e.target.value)
-            }
+            onFocus={() => {
+              setIsTyping(true);
+            }}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const cities = filterCitiesByLetter(
+                citiesOptions,
+                e.target.value
+              );
+              setCurrentCitiesoptions(cities);
+
+              setInputValue(e.target.value);
+            }}
             type="text"
             placeholder="Enter city to look for..."
             value={inputValue}
@@ -209,6 +250,24 @@ export default function HomePageLayout({
             </svg>
           </button>
         </div>
+
+        {isTyping && (
+          <div className="search-options-container">
+            {currentCitiesOptions?.map((city: string) => (
+              <motion.span
+                style={{
+                  fontSize: "2rem",
+                  padding: "1.2rem",
+                  borderBottom: "1px solid black",
+                }}
+                onClick={() => setInputValue(city)}
+                whileTap={{ backgroundColor: "rgb(205, 205, 247)" }}
+              >
+                {city}
+              </motion.span>
+            ))}
+          </div>
+        )}
       </form>
       <div className="homepage-top-btn-container">
         <button className={isWeeklyButtonClicked ? "" : "clicked"}>

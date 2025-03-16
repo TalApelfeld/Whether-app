@@ -214,6 +214,20 @@ body {
   transform: scale(0.95);
 }
 
+.search-options-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 6.1rem;
+  left: 6.5rem;
+  height: 18rem;
+  width: 80%;
+  border-radius: 10px;
+  color: #000000;
+  background-color: lavender;
+  overflow-y: scroll;
+}
+
 .homepage-title-container {
   margin: 0 auto;
   /* background-color: rgb(129, 34, 34); */
