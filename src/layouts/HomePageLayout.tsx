@@ -123,6 +123,7 @@ export default function HomePageLayout({
     } catch (error) {
       setIsError(true);
       setInputValue("");
+      setIsTyping(false);
       setSearchIsClicked(!searchIsClicked);
       console.log(error);
     } finally {
